@@ -31,7 +31,7 @@
     }
 
     .card {
-      max-width: 680px;
+      max-width: 760px;
       width: 100%;
     }
 
@@ -39,33 +39,42 @@
     .lockup {
       display: flex;
       align-items: center;
-      gap: 28px;
+      flex-wrap: wrap;
+      gap: 24px;
       margin-bottom: 48px;
     }
 
-    .mark svg { display: block; }
+    .mark svg {
+      display: block;
+      width: 100px;
+      height: auto;
+      flex-shrink: 0;
+    }
 
     .wordmark {
       display: flex;
       flex-direction: column;
       gap: 2px;
+      min-width: 0;
     }
 
     .name {
       font-weight: 600;
-      font-size: 36px;
-      letter-spacing: 0.12em;
+      font-size: clamp(22px, 5.5vw, 36px);
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      line-height: 1;
+      line-height: 1.15;
       color: var(--charcoal);
+      white-space: nowrap;
     }
 
     .tagline {
       font-weight: 300;
-      font-size: 14px;
-      letter-spacing: 0.22em;
+      font-size: clamp(11px, 2vw, 14px);
+      letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--readable-gray);
+      margin-top: 4px;
     }
 
     /* ── Divider ── */
@@ -120,6 +129,22 @@
       letter-spacing: 0.16em;
       text-transform: uppercase;
       color: var(--readable-gray);
+    }
+
+    /* ── Narrow screens: center the lockup once it wraps ── */
+    @media (max-width: 480px) {
+      .lockup {
+        justify-content: center;
+        text-align: center;
+      }
+
+      .mark svg {
+        margin: 0 auto;
+      }
+
+      .wordmark {
+        align-items: center;
+      }
     }
   </style>
 </head>
