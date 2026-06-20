@@ -68,6 +68,15 @@
       white-space: nowrap;
     }
 
+    .name .sm {
+      font-size: 0.32em;
+      font-weight: 400;
+      letter-spacing: 0;
+      vertical-align: super;
+      margin-left: 0.15em;
+      color: var(--readable-gray);
+    }
+
     .tagline {
       font-weight: 300;
       font-size: clamp(11px, 2vw, 14px);
@@ -131,6 +140,15 @@
       color: var(--readable-gray);
     }
 
+    /* ── Footer ── */
+    .footer {
+      margin-top: 64px;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #b0aca0;
+    }
+
     /* ── Narrow screens: center the lockup once it wraps ── */
     @media (max-width: 480px) {
       .lockup {
@@ -179,7 +197,7 @@
         </svg>
       </div>
       <div class="wordmark">
-        <div class="name">Chalkboard Research</div>
+        <div class="name">Chalkboard Research<span class="sm">℠</span></div>
         <div class="tagline">Drawing Insights from Your Data</div>
       </div>
     </div>
@@ -198,6 +216,8 @@
     </div>
 
     <p class="location">Santa Fe, New Mexico</p>
+
+    <p class="footer">Chalkboard Research LLC</p>
 
   </div>
 </body>
