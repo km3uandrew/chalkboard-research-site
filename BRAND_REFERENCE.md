@@ -26,8 +26,7 @@ briefing document for Claude Code or any future session continuing this work.
 | Pink    | `#CC79A7` | Left boxplot IQR outline |
 | Green   | `#009E73` | Right boxplot IQR outline; email link color |
 | Charcoal| `#2b2b2b` | Wordmark, name, whiskers, medians |
-| Readable gray | `#4a4a4a` | Body text |
-| Mid gray | `#6b6b6b` | Tagline, secondary text in rendered images |
+| Readable gray | `#4a4a4a` | Body text, tagline, secondary text in rendered images |
 | Background | `#ffffff` | White — all assets use white background |
 
 These are colorblind-friendly (Wong palette).
@@ -46,18 +45,8 @@ These are colorblind-friendly (Wong palette).
 - Google Fonts import: Josefin Sans (300, 400, 600) + Lora (400)
 
 ### Rendered images (cairosvg)
-Fonts must be installed locally before rendering. Download from Google Fonts GitHub:
-- `https://github.com/google/fonts/raw/main/ofl/josefinsans/JosefinSans%5Bwght%5D.ttf`
-- `https://github.com/google/fonts/raw/main/ofl/lora/Lora%5Bwght%5D.ttf`
-
-Use fonttools to extract static instances (300, 400, 600 for Josefin; 400 for Lora),
-fix name tables so each weight is a distinct family name, install to `~/.fonts/`, run `fc-cache`.
-
-Font family names to use in SVG `font-family` attributes:
-- `Josefin Sans SemiBold` — weight 600
-- `Josefin Sans` — weight 400
-- `Josefin Sans Light` — weight 300
-- `Lora` — weight 400
+All rendering is done via Docker — see the Rendering Pipeline section. Font handling is
+managed inside the Docker image; no local font installation is required.
 
 ---
 
@@ -121,7 +110,7 @@ All files live in the GitHub repo root unless noted. SVG sources are in `_source
 | `favicon.ico` | 16+32px | Browser tab icon (legacy fallback) |
 | `apple-touch-icon.png` | 180×180px | iOS home screen icon |
 | `og-image.png` | 1200×630px | Open Graph / link preview image |
-| `signature-logo.png` | 320×54px | Gmail signature image (hosted for URL insert) |
+| `signature-logo.png` | 548×96px | Gmail signature image (hosted for URL insert); wordmark only, no tagline |
 
 ### LinkedIn assets (upload manually)
 
@@ -145,31 +134,36 @@ All files live in the GitHub repo root unless noted. SVG sources are in `_source
 
 ## Rendering Pipeline
 
-All PNGs are rendered from SVG using cairosvg. Python dependencies:
-```
-pip install cairosvg Pillow fonttools
+All PNGs are rendered from SVG sources using cairosvg via Docker. Docker provides a
+Linux/FreeType rendering environment that matches the environment where the original
+assets were produced, avoiding macOS CoreText font weight discrepancies.
+
+### Rendering environment
+
+All assets are rendered via Docker (Linux + Pango/FreeType), which matches the Ubuntu 24
+environment where the original assets were produced. This is the only supported render path —
+macOS/CoreText produces lighter font weight and should not be used.
+
+**One-time setup:**
+```bash
+cd "Brand and First Use Info/chalkboard-research-site"
+docker build -t chalkboard-render .
 ```
 
-Standard render call:
-```python
-import cairosvg
-cairosvg.svg2png(url='source.svg', write_to='output.png', output_width=W, output_height=H)
+**Re-render all assets** (from the repo root):
+```bash
+docker run --rm -v "$(pwd):/work" chalkboard-render
 ```
 
-Always embed 144 DPI metadata in output PNGs for correct Preview rendering on macOS:
-```python
-import struct, zlib
+The image is reused on every subsequent run. Only rebuild if `Dockerfile` changes.
 
-def set_dpi(path, dpi=144):
-    with open(path, 'rb') as f:
-        data = f.read()
-    ppm = int(dpi / 0.0254)
-    phys = struct.pack('>IIB', ppm, ppm, 1)
-    crc = zlib.crc32(b'pHYs' + phys) & 0xffffffff
-    chunk = struct.pack('>I', 9) + b'pHYs' + phys + struct.pack('>I', crc)
-    with open(path, 'wb') as f:
-        f.write(data[:33] + chunk + data[33:])
-```
+Key details of the rendering environment:
+- cairosvg with Pango support (`libpango`, `pangocffi`, `pangocairocffi`) — required for
+  `font-weight="600"` to be passed through correctly; without Pango, numeric weights are ignored
+- Variable fonts installed directly to `/usr/local/share/fonts/` — Pango resolves weight 600
+  from the variable font axis; no static instance extraction needed
+- `signature-logo.svg` uses `font-family="Josefin Sans"` `font-weight="600"` — do not change
+  to `font-family="Josefin Sans SemiBold"` or add stroke compensation; those were macOS workarounds
 
 ### Per-asset render settings
 
@@ -177,16 +171,16 @@ def set_dpi(path, dpi=144):
 |-------|-----------|------------------|-------|
 | og-image.png | og-image.svg | 1200×630 | 144 DPI |
 | linkedin-banner.png | linkedin-banner.svg | 1128×191 | 144 DPI |
-| linkedin-logo-3box-300.png | linkedin-logo-sq.svg | 300×300 | 144 DPI; uses `scale(1.75) translate(-56, -46.9)` to center and size mark |
-| signature-logo.png | signature-logo.svg | 320×54 | render at 640×108 then downsample with Pillow LANCZOS for sharpness |
+| linkedin-logo-3box-300.png | linkedin-logo-sq.svg | 300×300 | 144 DPI |
+| signature-logo.png | signature-logo.svg | 548×96 | render at scale=1 (700×96), crop to (0,0,548,96); 72 DPI. Uses `font-weight="600"` — requires Pango in the Docker image to take effect |
 | apple-touch-icon.png | favicon.svg | 180×180 | 144 DPI |
-| favicon.ico | favicon.svg | 16+32px | Use Pillow ICO format |
+| favicon.ico | favicon.svg | 16+32px | Pillow ICO format |
 
 ---
 
 ## Open Issues / Active Threads
 
-- **Gmail signature:** signature-logo.png (320×54) is hosted at chalkboard-research.com/signature-logo.png. Insert via Gmail Settings → Signature → image icon → URL. Sizing behavior is inconsistent across Gmail contexts; this is a known Gmail limitation.
+- **Gmail signature:** signature-logo.png (548×96) is hosted at chalkboard-research.com/signature-logo.png. Insert via Gmail Settings → Signature → image icon → URL. Sizing behavior is inconsistent across Gmail contexts; this is a known Gmail limitation.
 - **LinkedIn OG cache:** if og-image.png is updated, run LinkedIn Post Inspector (linkedin.com/post-inspector) to force a re-scrape. If cache persists, rename file to og-image-v2.png and update og:image meta tags in index.html.
 - **LinkedIn mobile banner overlap:** banner wordmark starts at x=420 to clear the square logo overlay on mobile. May need further adjustment if LinkedIn changes its mobile layout.
 - **Dark mode:** index.html does not implement prefers-color-scheme. White background is intentional; page will look the same in dark mode browsers.
