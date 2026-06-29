@@ -37,7 +37,7 @@ These are colorblind-friendly (Wong palette).
 
 ### Web (index.html)
 - **Headlines / wordmark:** Josefin Sans SemiBold (weight 600), all-caps, letter-spacing 0.1em
-- **Tagline:** Josefin Sans Light (weight 300), all-caps, letter-spacing 0.22em
+- **Tagline:** Josefin Sans Regular (weight 400), all-caps, letter-spacing 0.18em, padding-left 5px (optical compensation for round left edge of "C" in wordmark above vs straight "D" in tagline)
 - **Body text:** Lora Regular (weight 400), 18px, line-height 1.75
 - **Name (Kary Myers, PhD):** Josefin Sans SemiBold, 15px, all-caps
 - **Contact / location:** Josefin Sans, 15px / 14px, all-caps
