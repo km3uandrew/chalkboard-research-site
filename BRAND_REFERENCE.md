@@ -53,7 +53,7 @@ managed inside the Docker image; no local font installation is required.
 ## Logo: The Boxplot Mark
 
 The logo is three boxplots (Concept 2: colored IQR outlines, charcoal whiskers and median).
-The SVG source is `logo-master.svg`.
+The mark geometry is embedded directly in each asset SVG in `_source/`.
 
 ### Design rules (hard-won):
 1. **Drawing order:** all whisker lines and median lines draw BEFORE the rect (box outline),
@@ -123,7 +123,6 @@ All files live in the GitHub repo root unless noted. SVG sources are in `_source
 
 | File | Purpose |
 |------|---------|
-| `logo-master.svg` | Canonical boxplot mark — all other files derive from this |
 | `og-image.svg` | Source for og-image.png |
 | `linkedin-banner.svg` | Source for linkedin-banner.png |
 | `linkedin-logo-sq.svg` | Source for linkedin-logo-3box-300.png |
