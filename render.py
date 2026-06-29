@@ -25,14 +25,26 @@ def set_dpi(path, dpi=144):
         f.write(data[:33] + chunk + data[33:])
 
 
-def render(svg, output, *, width, height, dpi=144, src=None):
+def render(svg, output, *, width, height, dpi=144, src=None, supersample=1):
+    """Render SVG to PNG. supersample>1 renders at that multiple then downsamples with LANCZOS."""
     out_path = os.path.join(OUT, output)
-    cairosvg.svg2png(
-        url=os.path.join(src or SRC, svg),
-        write_to=out_path,
-        output_width=width,
-        output_height=height,
-    )
+    if supersample > 1:
+        buf = io.BytesIO()
+        cairosvg.svg2png(
+            url=os.path.join(src or SRC, svg),
+            write_to=buf,
+            output_width=width * supersample,
+            output_height=height * supersample,
+        )
+        buf.seek(0)
+        Image.open(buf).convert("RGB").resize((width, height), Image.LANCZOS).save(out_path)
+    else:
+        cairosvg.svg2png(
+            url=os.path.join(src or SRC, svg),
+            write_to=out_path,
+            output_width=width,
+            output_height=height,
+        )
     set_dpi(out_path, dpi=dpi)
     print(f"{output}: {os.path.getsize(out_path):,} bytes")
 
@@ -65,8 +77,8 @@ def render_favicon_ico():
 
 
 if __name__ == "__main__":
-    render("og-image.svg",          "og-image.png",               width=1200, height=630,  dpi=144)
-    render("linkedin-banner.svg",   "linkedin-banner.png",        width=1128, height=191,  dpi=144)
+    render("og-image.svg",          "og-image.png",               width=1200, height=630,  dpi=144, supersample=2)
+    render("linkedin-banner.svg",   "linkedin-banner.png",        width=1128, height=191,  dpi=144, supersample=2)
     render("linkedin-logo-sq.svg",  "linkedin-logo-3box-300.png", width=300,  height=300,  dpi=144)
     render("favicon.svg",           "apple-touch-icon.png",       width=180,  height=180,  dpi=144, src=OUT)
     render_signature_logo()
