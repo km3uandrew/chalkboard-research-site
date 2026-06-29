@@ -23,9 +23,9 @@
   <line x1="82.6" y1="75.6"  x2="102.2" y2="75.6"  stroke="#2b2b2b" stroke-width="1.96" stroke-linecap="round"/>
   <rect x="79.8"  y="28"     width="25.2" height="33.6" stroke="#009E73" stroke-width="1.96" fill="none"/>
   </g>
-  <text x="370" y="244" font-family="Josefin Sans SemiBold" font-size="46" letter-spacing="3" fill="#2b2b2b">CHALKBOARD RESEARCH</text>
+  <text x="370" y="244" font-family="Josefin Sans" font-weight="600" font-size="46" letter-spacing="3" fill="#2b2b2b">CHALKBOARD RESEARCH</text>
   <text x="1026" y="218" font-family="Josefin Sans" font-size="15" letter-spacing="0.5" fill="#6b6b6b">SM</text>
-  <text x="375" y="279" font-family="Josefin Sans Light" font-size="19" letter-spacing="3" fill="#4a4a4a">DRAWING INSIGHTS FROM YOUR DATA</text>
+  <text x="375" y="279" font-family="Josefin Sans" font-weight="300" font-size="19" letter-spacing="3" fill="#4a4a4a">DRAWING INSIGHTS FROM YOUR DATA</text>
   <line x1="220" y1="340" x2="980" y2="340" stroke="#e0e0e0" stroke-width="1.5"/>
   <text x="220" y="395" font-family="Lora" font-weight="400" font-size="25" letter-spacing="0" fill="#4a4a4a">
     <tspan x="220" dy="0">I collaborate with local businesses, nonprofits, public agencies,</tspan>

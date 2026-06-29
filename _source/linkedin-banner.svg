@@ -1,5 +1,5 @@
 <svg width="1128" height="191" viewBox="0 0 1128 191" xmlns="http://www.w3.org/2000/svg">
   <rect width="1128" height="191" fill="#ffffff"/>
-  <text x="420" y="90" font-family="Josefin Sans SemiBold" font-size="40" letter-spacing="2.5" fill="#2b2b2b">CHALKBOARD RESEARCH</text>
-  <text x="423" y="120" font-family="Josefin Sans Light" font-size="16" letter-spacing="2.5" fill="#4a4a4a">DRAWING INSIGHTS FROM YOUR DATA</text>
+  <text x="420" y="90" font-family="Josefin Sans" font-weight="600" font-size="40" letter-spacing="2.5" fill="#2b2b2b">CHALKBOARD RESEARCH</text>
+  <text x="423" y="120" font-family="Josefin Sans" font-weight="300" font-size="16" letter-spacing="2.5" fill="#4a4a4a">DRAWING INSIGHTS FROM YOUR DATA</text>
 </svg>
