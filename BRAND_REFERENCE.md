@@ -109,7 +109,7 @@ All files live in the GitHub repo root unless noted. SVG sources are in `_source
 | `favicon.svg` | 32×32 viewBox | Browser tab icon (SVG, modern browsers) |
 | `favicon.ico` | 16+32px | Browser tab icon (legacy fallback) |
 | `apple-touch-icon.png` | 180×180px | iOS home screen icon |
-| `og-image.png` | 1200×630px | Open Graph / link preview image |
+| `og-image-v2.png` | 1200×630px | Open Graph / link preview image |
 | `signature-logo.png` | 548×96px | Gmail signature image (hosted for URL insert); wordmark only, no tagline |
 
 ### LinkedIn assets (upload manually)
@@ -123,7 +123,7 @@ All files live in the GitHub repo root unless noted. SVG sources are in `_source
 
 | File | Purpose |
 |------|---------|
-| `og-image.svg` | Source for og-image.png |
+| `og-image.svg` | Source for og-image-v2.png |
 | `linkedin-banner.svg` | Source for linkedin-banner.png |
 | `linkedin-logo-sq.svg` | Source for linkedin-logo-3box-300.png |
 | `signature-logo.svg` | Source for signature-logo.png |
@@ -168,7 +168,7 @@ Key details of the rendering environment:
 
 | Asset | SVG source | Output dimensions | Notes |
 |-------|-----------|------------------|-------|
-| og-image.png | og-image.svg | 1200×630 | 144 DPI |
+| og-image-v2.png | og-image.svg | 1200×630 | 144 DPI |
 | linkedin-banner.png | linkedin-banner.svg | 1128×191 | 144 DPI |
 | linkedin-logo-3box-300.png | linkedin-logo-sq.svg | 300×300 | 144 DPI |
 | signature-logo.png | signature-logo.svg | 548×96 | render at scale=1 (700×96), crop to (0,0,548,96); 72 DPI. Uses `font-weight="600"` — requires Pango in the Docker image to take effect |
@@ -180,7 +180,7 @@ Key details of the rendering environment:
 ## Open Issues / Active Threads
 
 - **Gmail signature:** signature-logo.png (548×96) is hosted at chalkboard-research.com/signature-logo.png. Insert via Gmail Settings → Signature → image icon → URL. Sizing behavior is inconsistent across Gmail contexts; this is a known Gmail limitation.
-- **LinkedIn OG cache:** if og-image.png is updated, run LinkedIn Post Inspector (linkedin.com/post-inspector) to force a re-scrape. If cache persists, rename file to og-image-v2.png and update og:image meta tags in index.html.
+- **LinkedIn OG cache:** if og-image-v2.png is updated, run LinkedIn Post Inspector (linkedin.com/post-inspector) to force a re-scrape. If cache persists, rename to og-image-v3.png (incrementing the version) and update the og:image meta tags in index.html, render.py, and BRAND_REFERENCE.md.
 - **LinkedIn mobile banner overlap:** banner wordmark starts at x=420 to clear the square logo overlay on mobile. May need further adjustment if LinkedIn changes its mobile layout.
 - **Dark mode:** index.html does not implement prefers-color-scheme. White background is intentional; page will look the same in dark mode browsers.
 

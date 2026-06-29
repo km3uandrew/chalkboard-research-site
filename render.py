@@ -77,7 +77,7 @@ def render_favicon_ico():
 
 
 if __name__ == "__main__":
-    render("og-image.svg",          "og-image.png",               width=1200, height=630,  dpi=144, supersample=2)
+    render("og-image.svg",          "og-image-v2.png",               width=1200, height=630,  dpi=144, supersample=2)
     render("linkedin-banner.svg",   "linkedin-banner.png",        width=1128, height=191,  dpi=144, supersample=2)
     render("linkedin-logo-sq.svg",  "linkedin-logo-3box-300.png", width=300,  height=300,  dpi=144)
     render("favicon.svg",           "apple-touch-icon.png",       width=180,  height=180,  dpi=144, src=OUT)
