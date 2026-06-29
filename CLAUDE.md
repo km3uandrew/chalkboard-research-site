@@ -1,7 +1,17 @@
 # Chalkboard Research — Brand & Technical Reference
 
-This document is the source of truth for all brand assets. It is intended as a
-briefing document for Claude Code or any future session continuing this work.
+This document is the source of truth for all brand assets and the working conventions
+for this repo. It is loaded automatically by Claude Code at the start of every session.
+
+## Working conventions
+
+- **Render assets:** `docker run --rm -v "$(pwd):/work" chalkboard-render` from the repo root.
+  Docker Desktop must be running. One-time build: `docker build -t chalkboard-render .`
+- **Git:** commit locally, then ask before pushing to remote. Site auto-deploys on push via Cloudflare Pages.
+- **Python (macOS fallback only):** `/opt/homebrew/bin/python3.9` has cairosvg/Pillow/fonttools.
+  Do not use `/usr/bin/python3` (macOS system Python, missing packages). Docker is preferred for all renders.
+- **og-image versioning:** if LinkedIn caches a stale og-image, increment the filename
+  (og-image-v2.png → og-image-v3.png) and update the reference in index.html, render.py, and this file.
 
 ---
 
@@ -180,7 +190,7 @@ Key details of the rendering environment:
 ## Open Issues / Active Threads
 
 - **Gmail signature:** signature-logo.png (548×96) is hosted at chalkboard-research.com/signature-logo.png. Insert via Gmail Settings → Signature → image icon → URL. Sizing behavior is inconsistent across Gmail contexts; this is a known Gmail limitation.
-- **LinkedIn OG cache:** if og-image-v2.png is updated, run LinkedIn Post Inspector (linkedin.com/post-inspector) to force a re-scrape. If cache persists, rename to og-image-v3.png (incrementing the version) and update the og:image meta tags in index.html, render.py, and BRAND_REFERENCE.md.
+- **LinkedIn OG cache:** if og-image-v2.png is updated, run LinkedIn Post Inspector (linkedin.com/post-inspector) to force a re-scrape. If cache persists, rename to og-image-v3.png (incrementing the version) and update the og:image meta tags in index.html, render.py, and CLAUDE.md.
 - **LinkedIn mobile banner overlap:** banner wordmark starts at x=420 to clear the square logo overlay on mobile. May need further adjustment if LinkedIn changes its mobile layout.
 - **Dark mode:** index.html does not implement prefers-color-scheme. White background is intentional; page will look the same in dark mode browsers.
 
