@@ -137,6 +137,17 @@ path by convention, often ignoring the HTML link tags.
 For slide decks and handouts. Light backgrounds only — strokes and text are `#2b2b2b`,
 and the lockup's divider line (`#d0d0d0`) washes out on mid-tone fills.
 
+**Using these assets from other sessions:** prefer the vector files (`mark.svg`,
+`lockup.pdf`) where the tool accepts them; use the transparent 2× PNGs otherwise.
+Claude Code sessions on this machine read them from this repo directly
+(`~/Chalkboard Research/Brand and First Use Info/chalkboard-research-site/deck/`).
+Sessions without filesystem access (e.g. Claude Chat) fetch the public URLs — the
+whole repo is served by Cloudflare Pages:
+`https://chalkboard-research.com/deck/mark.svg`, `.../deck/lockup.pdf`,
+`.../deck/mark-2x.png`, `.../deck/lockup-2x.png`. When prompting a session that
+cannot read this file, restate the constraint: transparent background, charcoal
+`#2b2b2b` strokes and text, light slide backgrounds only.
+
 | File | Dimensions | Purpose |
 |------|-----------|---------|
 | `deck/mark.svg` | 106×90 viewBox | Tight-cropped three-box mark, vector (insert directly into Keynote/PowerPoint/Google Slides) |
