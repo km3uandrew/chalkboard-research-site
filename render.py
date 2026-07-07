@@ -58,20 +58,20 @@ def render_signature_logo():
     buf.seek(0)
     img = Image.open(buf).convert("RGB")
     img = img.crop((0, 0, 548, img.height))
-    out_path = os.path.join(OUT, "signature-logo.png")
+    out_path = os.path.join(OUT, "signature", "signature-logo.png")
     img.save(out_path)
     set_dpi(out_path, dpi=72)
-    print(f"signature-logo.png: {os.path.getsize(out_path):,} bytes")
+    print(f"signature/signature-logo.png: {os.path.getsize(out_path):,} bytes")
 
     buf = io.BytesIO()
     cairosvg.svg2png(url=os.path.join(SRC, "signature-logo.svg"), write_to=buf, scale=4)
     buf.seek(0)
     img = Image.open(buf).convert("RGB")
     img = img.crop((0, 0, 548 * 4, img.height)).resize((548 * 2, 96 * 2), Image.LANCZOS)
-    out_path = os.path.join(OUT, "signature-logo-2x.png")
+    out_path = os.path.join(OUT, "signature", "signature-logo-2x.png")
     img.save(out_path)
     set_dpi(out_path, dpi=144)
-    print(f"signature-logo-2x.png: {os.path.getsize(out_path):,} bytes")
+    print(f"signature/signature-logo-2x.png: {os.path.getsize(out_path):,} bytes")
 
 
 def render_deck_assets():
@@ -127,9 +127,9 @@ def render_favicon_ico():
 
 
 if __name__ == "__main__":
-    render("og-image.svg",          "og-image-v2.png",               width=1200, height=630,  dpi=144, supersample=2)
-    render("linkedin-banner.svg",   "linkedin-banner.png",        width=1128, height=191,  dpi=144, supersample=2)
-    render("linkedin-logo-sq.svg",  "linkedin-logo-3box-300.png", width=300,  height=300,  dpi=144, supersample=2)
+    render("og-image.svg",          "web/og-image-v2.png",                 width=1200, height=630,  dpi=144, supersample=2)
+    render("linkedin-banner.svg",   "linkedin/linkedin-banner.png",        width=1128, height=191,  dpi=144, supersample=2)
+    render("linkedin-logo-sq.svg",  "linkedin/linkedin-logo-3box-300.png", width=300,  height=300,  dpi=144, supersample=2)
     render("favicon.svg",           "apple-touch-icon.png",       width=180,  height=180,  dpi=144, src=OUT)
     render_signature_logo()
     render_deck_assets()

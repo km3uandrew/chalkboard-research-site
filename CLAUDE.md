@@ -109,19 +109,28 @@ The mark geometry is embedded directly in each asset SVG in `_source/`.
 
 ## Asset Inventory
 
-All files live in the GitHub repo root unless noted. SVG sources are in `_source/`.
+Assets are organized by use: `web/` (site images), `linkedin/`, `signature/`, `deck/`,
+with SVG sources in `_source/`. The whole repo is served by Cloudflare Pages, so every
+file has a URL at its repo path. `index.html` and the favicon trio stay at the repo
+root — browsers and iOS request `/favicon.ico` and `/apple-touch-icon.png` at the root
+path by convention, often ignoring the HTML link tags.
 
 ### Web assets (served at chalkboard-research.com)
 
 | File | Dimensions | Purpose |
 |------|-----------|---------|
 | `index.html` | — | Landing page |
-| `favicon.svg` | 32×32 viewBox | Browser tab icon (SVG, modern browsers) |
-| `favicon.ico` | 16+32px | Browser tab icon (legacy fallback) |
-| `apple-touch-icon.png` | 180×180px | iOS home screen icon |
-| `og-image-v2.png` | 1200×630px | Open Graph / link preview image |
-| `signature-logo.png` | 548×96px | Email signature image, 1× legacy; wordmark only, no tagline |
-| `signature-logo-2x.png` | 1096×192px | Email signature image for high-DPI displays — the one referenced in the Proton Mail signature |
+| `favicon.svg` | 32×32 viewBox | Browser tab icon (SVG, modern browsers); root by convention |
+| `favicon.ico` | 16+32px | Browser tab icon (legacy fallback); root by convention |
+| `apple-touch-icon.png` | 180×180px | iOS home screen icon; root by convention |
+| `web/og-image-v2.png` | 1200×630px | Open Graph / link preview image |
+
+### Signature assets (signature/ folder)
+
+| File | Dimensions | Purpose |
+|------|-----------|---------|
+| `signature/signature-logo.png` | 548×96px | Email signature image, 1× legacy; wordmark only, no tagline |
+| `signature/signature-logo-2x.png` | 1096×192px | Email signature image for high-DPI displays — the one referenced in the Proton Mail signature |
 
 ### Deck assets (deck/ folder, transparent backgrounds)
 
@@ -139,8 +148,8 @@ and the lockup's divider line (`#d0d0d0`) washes out on mid-tone fills.
 
 | File | Dimensions | Purpose |
 |------|-----------|---------|
-| `linkedin-logo-3box-300.png` | 300×300px | Company Page profile/logo slot |
-| `linkedin-banner.png` | 1128×191px | Company Page cover/banner image |
+| `linkedin/linkedin-logo-3box-300.png` | 300×300px | Company Page profile/logo slot |
+| `linkedin/linkedin-banner.png` | 1128×191px | Company Page cover/banner image |
 
 ### SVG sources (_source/ folder)
 
@@ -191,11 +200,11 @@ Key details of the rendering environment:
 
 | Asset | SVG source | Output dimensions | Notes |
 |-------|-----------|------------------|-------|
-| og-image-v2.png | og-image.svg | 1200×630 | 144 DPI |
-| linkedin-banner.png | linkedin-banner.svg | 1128×191 | 144 DPI |
-| linkedin-logo-3box-300.png | linkedin-logo-sq.svg | 300×300 | 144 DPI |
-| signature-logo.png | signature-logo.svg | 548×96 | render at scale=1 (700×96), crop to (0,0,548,96); 72 DPI. Uses `font-weight="600"` — requires Pango in the Docker image to take effect |
-| signature-logo-2x.png | signature-logo.svg | 1096×192 | supersampled from a 4× render; 144 DPI |
+| web/og-image-v2.png | og-image.svg | 1200×630 | 144 DPI |
+| linkedin/linkedin-banner.png | linkedin-banner.svg | 1128×191 | 144 DPI |
+| linkedin/linkedin-logo-3box-300.png | linkedin-logo-sq.svg | 300×300 | 144 DPI |
+| signature/signature-logo.png | signature-logo.svg | 548×96 | render at scale=1 (700×96), crop to (0,0,548,96); 72 DPI. Uses `font-weight="600"` — requires Pango in the Docker image to take effect |
+| signature/signature-logo-2x.png | signature-logo.svg | 1096×192 | supersampled from a 4× render; 144 DPI |
 | deck/mark-2x.png | deck/mark.svg | 636×540 | transparent; scale=6 |
 | deck/lockup.pdf | signature-logo.svg | 548×96pt | white rect stripped and canvas narrowed at render time (see render_deck_assets) |
 | deck/lockup-2x.png | signature-logo.svg | 1096×192 | transparent; supersampled from 4×; same source transform as lockup.pdf |
