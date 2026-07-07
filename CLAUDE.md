@@ -5,6 +5,10 @@ for this repo. It is loaded automatically by Claude Code at the start of every s
 
 ## Working conventions
 
+- **Everything committed here is published.** Cloudflare Pages serves the whole repo,
+  so every committed file is publicly downloadable at chalkboard-research.com/<path>.
+  Client content, client document builders, and private tooling never go in this repo —
+  they live in chalkboard-core (private) or the client's own repo.
 - **Render assets:** `docker run --rm -v "$(pwd):/work" chalkboard-render` from the repo root.
   Docker Desktop must be running. One-time build: `docker build -t chalkboard-render .`
 - **Git:** commit locally, then ask before pushing to remote. Site auto-deploys on push via Cloudflare Pages.
@@ -63,7 +67,14 @@ managed inside the Docker image; no local font installation is required.
 ## Logo: The Boxplot Mark
 
 The logo is three boxplots (Concept 2: colored IQR outlines, charcoal whiskers and median).
-The mark geometry is embedded directly in each asset SVG in `_source/`.
+The mark geometry is embedded directly in each asset SVG in `_source/`, the inline SVG in
+`index.html`, and `deck/mark.svg`.
+
+**Cross-repo duplicate:** the lockup geometry (mark + divider + wordmark, from
+`_source/signature-logo.svg`) is also duplicated as vector-drawing code in
+`draw_lockup()` in chalkboard-core's `pdf/chalkboard_pdf.py` (private repo, reportlab
+client documents). If the mark or lockup geometry changes here, update that function
+to match.
 
 ### Design rules (hard-won):
 1. **Drawing order:** all whisker lines and median lines draw BEFORE the rect (box outline),
@@ -81,29 +92,37 @@ The mark geometry is embedded directly in each asset SVG in `_source/`.
 
 ### Master logo coordinates (112×95 viewBox):
 
-**Left boxplot — pink (#CC79A7), stroke-width 1.96:**
-- Top whisker vertical: x=19.6, y1=14, y2=24.22
-- Top whisker cap: x1=9.8, x2=29.4, y=14
-- Median: x1=7, x2=32.2, y=42
-- Bottom whisker vertical: x=19.6, y1=65.38, y2=78.4
-- Bottom whisker cap: x1=9.8, x2=29.4, y=78.4
-- IQR rect: x=7, y=25.2, width=25.2, height=39.2
+Pixel-snapped 2026-07-07: every stroke-width is 2 and every centerline/edge coordinate
+is an integer, so strokes land exactly on pixel boundaries at 1× (and any integer
+scale). Box widths are even so the whisker centerline is an integer at the box center.
+Do not reintroduce fractional coordinates or stroke widths.
 
-**Center boxplot — blue (#56B4E9), stroke-width 2.1:**
-- Top whisker vertical: x=56, y1=5.6, y2=18.55
-- Top whisker cap: x1=43.4, x2=68.6, y=5.6
-- Median: x1=40.6, x2=71.4, y=43.4
-- Bottom whisker vertical: x=56, y1=73.85, y2=88.2
-- Bottom whisker cap: x1=43.4, x2=68.6, y=88.2
-- IQR rect: x=40.6, y=19.6, width=30.8, height=53.2
+**Left boxplot — pink (#CC79A7), stroke-width 2:**
+- Top whisker vertical: x=20, y1=14, y2=24
+- Top whisker cap: x1=10, x2=30, y=14
+- Median: x1=7, x2=33, y=42
+- Bottom whisker vertical: x=20, y1=65, y2=78
+- Bottom whisker cap: x1=10, x2=30, y=78
+- IQR rect: x=7, y=25, width=26, height=39
 
-**Right boxplot — green (#009E73), stroke-width 1.96:**
-- Top whisker vertical: x=92.4, y1=16.8, y2=27.02
-- Top whisker cap: x1=82.6, x2=102.2, y=16.8
-- Median: x1=79.8, x2=105, y=46.2
-- Bottom whisker vertical: x=92.4, y1=62.58, y2=75.6
-- Bottom whisker cap: x1=82.6, x2=102.2, y=75.6
-- IQR rect: x=79.8, y=28, width=25.2, height=33.6
+**Center boxplot — blue (#56B4E9), stroke-width 2:**
+- Top whisker vertical: x=56, y1=6, y2=19
+- Top whisker cap: x1=43, x2=69, y=6
+- Median: x1=41, x2=71, y=43
+- Bottom whisker vertical: x=56, y1=74, y2=88
+- Bottom whisker cap: x1=43, x2=69, y=88
+- IQR rect: x=41, y=20, width=30, height=53
+
+**Right boxplot — green (#009E73), stroke-width 2:**
+- Top whisker vertical: x=92, y1=17, y2=27
+- Top whisker cap: x1=82, x2=102, y=17
+- Median: x1=79, x2=105, y=46
+- Bottom whisker vertical: x=92, y1=63, y2=76
+- Bottom whisker cap: x1=82, x2=102, y=76
+- IQR rect: x=79, y=28, width=26, height=34
+
+(The signature-logo lockup uses its own slightly different integer geometry —
+see `_source/signature-logo.svg` — with the same design rules.)
 
 ---
 
