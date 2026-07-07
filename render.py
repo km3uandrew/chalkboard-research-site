@@ -50,7 +50,9 @@ def render(svg, output, *, width, height, dpi=144, src=None, supersample=1):
 
 
 def render_signature_logo():
-    """Render at scale=1 (700×96), crop to content + 19px right padding → 548×96."""
+    """Render at scale=1 (700×96), crop to content + 19px right padding → 548×96.
+    Also emit a 2× version (1096×192, supersampled from 4×) for high-DPI email
+    clients — display it at width=548 in the signature HTML."""
     buf = io.BytesIO()
     cairosvg.svg2png(url=os.path.join(SRC, "signature-logo.svg"), write_to=buf, scale=1)
     buf.seek(0)
@@ -60,6 +62,16 @@ def render_signature_logo():
     img.save(out_path)
     set_dpi(out_path, dpi=72)
     print(f"signature-logo.png: {os.path.getsize(out_path):,} bytes")
+
+    buf = io.BytesIO()
+    cairosvg.svg2png(url=os.path.join(SRC, "signature-logo.svg"), write_to=buf, scale=4)
+    buf.seek(0)
+    img = Image.open(buf).convert("RGB")
+    img = img.crop((0, 0, 548 * 4, img.height)).resize((548 * 2, 96 * 2), Image.LANCZOS)
+    out_path = os.path.join(OUT, "signature-logo-2x.png")
+    img.save(out_path)
+    set_dpi(out_path, dpi=144)
+    print(f"signature-logo-2x.png: {os.path.getsize(out_path):,} bytes")
 
 
 def render_favicon_ico():
