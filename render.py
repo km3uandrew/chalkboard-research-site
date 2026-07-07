@@ -74,6 +74,44 @@ def render_signature_logo():
     print(f"signature-logo-2x.png: {os.path.getsize(out_path):,} bytes")
 
 
+def render_deck_assets():
+    """Transparent-background assets for slide decks and handouts, in deck/.
+    Light backgrounds only (strokes and text are #2b2b2b).
+
+    - mark-2x.png: tight-cropped three-box mark from deck/mark.svg
+    - lockup.pdf: vector lockup (fonts embedded by cairo; Keynote/PowerPoint take PDF)
+    - lockup-2x.png: 1096x192 transparent raster lockup
+
+    The lockup renders from _source/signature-logo.svg with the white
+    background rect stripped and the canvas narrowed to the 548-unit crop,
+    so there is one source of truth for the lockup geometry."""
+    deck = os.path.join(OUT, "deck")
+
+    out_path = os.path.join(deck, "mark-2x.png")
+    cairosvg.svg2png(url=os.path.join(deck, "mark.svg"), write_to=out_path, scale=6)
+    set_dpi(out_path, dpi=144)
+    print(f"deck/mark-2x.png: {os.path.getsize(out_path):,} bytes")
+
+    with open(os.path.join(SRC, "signature-logo.svg")) as f:
+        svg = f.read()
+    svg = svg.replace('<rect width="700" height="96" fill="white"/>', "")
+    svg = svg.replace('width="700" height="96" viewBox="0 0 700 96"',
+                      'width="548" height="96" viewBox="0 0 548 96"')
+
+    out_path = os.path.join(deck, "lockup.pdf")
+    cairosvg.svg2pdf(bytestring=svg.encode(), write_to=out_path)
+    print(f"deck/lockup.pdf: {os.path.getsize(out_path):,} bytes")
+
+    buf = io.BytesIO()
+    cairosvg.svg2png(bytestring=svg.encode(), write_to=buf, scale=4)
+    buf.seek(0)
+    img = Image.open(buf).convert("RGBA").resize((548 * 2, 96 * 2), Image.LANCZOS)
+    out_path = os.path.join(deck, "lockup-2x.png")
+    img.save(out_path)
+    set_dpi(out_path, dpi=144)
+    print(f"deck/lockup-2x.png: {os.path.getsize(out_path):,} bytes")
+
+
 def render_favicon_ico():
     """Render favicon at 16px and 32px and combine into a .ico file."""
     sizes = [16, 32]
@@ -94,5 +132,6 @@ if __name__ == "__main__":
     render("linkedin-logo-sq.svg",  "linkedin-logo-3box-300.png", width=300,  height=300,  dpi=144, supersample=2)
     render("favicon.svg",           "apple-touch-icon.png",       width=180,  height=180,  dpi=144, src=OUT)
     render_signature_logo()
+    render_deck_assets()
     render_favicon_ico()
     print("Done.")

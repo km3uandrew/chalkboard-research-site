@@ -120,7 +120,20 @@ All files live in the GitHub repo root unless noted. SVG sources are in `_source
 | `favicon.ico` | 16+32px | Browser tab icon (legacy fallback) |
 | `apple-touch-icon.png` | 180×180px | iOS home screen icon |
 | `og-image-v2.png` | 1200×630px | Open Graph / link preview image |
-| `signature-logo.png` | 548×96px | Gmail signature image (hosted for URL insert); wordmark only, no tagline |
+| `signature-logo.png` | 548×96px | Email signature image, 1× legacy; wordmark only, no tagline |
+| `signature-logo-2x.png` | 1096×192px | Email signature image for high-DPI displays — the one referenced in the Proton Mail signature |
+
+### Deck assets (deck/ folder, transparent backgrounds)
+
+For slide decks and handouts. Light backgrounds only — strokes and text are `#2b2b2b`,
+and the lockup's divider line (`#d0d0d0`) washes out on mid-tone fills.
+
+| File | Dimensions | Purpose |
+|------|-----------|---------|
+| `deck/mark.svg` | 106×90 viewBox | Tight-cropped three-box mark, vector (insert directly into Keynote/PowerPoint/Google Slides) |
+| `deck/mark-2x.png` | 636×540px | Raster fallback for the mark |
+| `deck/lockup.pdf` | 548×96pt | Vector lockup with fonts embedded (SVG text would require Josefin Sans installed, so the vector lockup ships as PDF) |
+| `deck/lockup-2x.png` | 1096×192px | Raster fallback for the lockup |
 
 ### LinkedIn assets (upload manually)
 
@@ -182,6 +195,10 @@ Key details of the rendering environment:
 | linkedin-banner.png | linkedin-banner.svg | 1128×191 | 144 DPI |
 | linkedin-logo-3box-300.png | linkedin-logo-sq.svg | 300×300 | 144 DPI |
 | signature-logo.png | signature-logo.svg | 548×96 | render at scale=1 (700×96), crop to (0,0,548,96); 72 DPI. Uses `font-weight="600"` — requires Pango in the Docker image to take effect |
+| signature-logo-2x.png | signature-logo.svg | 1096×192 | supersampled from a 4× render; 144 DPI |
+| deck/mark-2x.png | deck/mark.svg | 636×540 | transparent; scale=6 |
+| deck/lockup.pdf | signature-logo.svg | 548×96pt | white rect stripped and canvas narrowed at render time (see render_deck_assets) |
+| deck/lockup-2x.png | signature-logo.svg | 1096×192 | transparent; supersampled from 4×; same source transform as lockup.pdf |
 | apple-touch-icon.png | favicon.svg | 180×180 | 144 DPI |
 | favicon.ico | favicon.svg | 16+32px | Pillow ICO format |
 
