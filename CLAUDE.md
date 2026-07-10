@@ -150,6 +150,7 @@ path by convention, often ignoring the HTML link tags.
 |------|-----------|---------|
 | `signature/signature-logo.png` | 548×96px | Email signature image, 1× legacy; wordmark only, no tagline |
 | `signature/signature-logo-2x.png` | 1096×192px | Email signature image for high-DPI displays — the one referenced in the Proton Mail signature |
+| `signature/email_signature.html` | — | The signature HTML pasted into Proton Mail's editor (HTML mode); logo linked to the site at width 400 |
 
 ### Deck assets (deck/ folder, transparent backgrounds)
 
