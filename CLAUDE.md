@@ -15,7 +15,7 @@ for this repo. It is loaded automatically by Claude Code at the start of every s
 - **Python (macOS fallback only):** `/opt/homebrew/bin/python3.9` has cairosvg/Pillow/fonttools.
   Do not use `/usr/bin/python3` (macOS system Python, missing packages). Docker is preferred for all renders.
 - **og-image versioning:** if LinkedIn caches a stale og-image, increment the filename
-  (og-image-v2.png → og-image-v3.png) and update the reference in index.html, render.py, and this file.
+  (og-image-v3.png → og-image-v4.png) and update the reference in index.html, render.py, and this file.
 
 ---
 
@@ -49,18 +49,34 @@ These are colorblind-friendly (Wong palette).
 
 ## Typography
 
+The brand sans-serif is **Jost** (a Futura revival; Google Fonts, OFL). It replaced
+Josefin Sans on 2026-07-17. The wordmark weight is **Jost wght 600** — approved from a
+weight-ladder render of static instances. Body serif remains **Lora**.
+
+**Two-font reality:** the web page uses Google-Fonts-served variable Jost, where numeric
+weights (300/400/600) work normally in browsers. Rendered images cannot reach weight 600
+through `font-weight` (see Rendering Pipeline), so the Docker image builds a static
+wght-600 instance registered under the family name **"Jost W600"**; wordmark-weight text
+in the SVG sources uses `font-family="Jost W600"` with no font-weight attribute, and
+lighter text uses plain `font-family="Jost"` (renders as Regular).
+
+**Historical note:** assets rendered before 2026-07-17 were effectively Josefin Sans
+wght 700 despite the documented "SemiBold 600" (the old pipeline silently snapped 600 to
+Bold), so old renders should not be used as weight references.
+
 ### Web (index.html)
-- **Headlines / wordmark:** Josefin Sans SemiBold (weight 600), all-caps, letter-spacing 0.1em
-- **Tagline:** Josefin Sans Regular (weight 400), all-caps, letter-spacing 0.18em, padding-left 5px (optical compensation for round left edge of "C" in wordmark above vs straight "D" in tagline)
+- **Headlines / wordmark:** Jost weight 600, all-caps, letter-spacing 0.1em
+- **Tagline:** Jost Regular (weight 400), all-caps, letter-spacing 0.18em, padding-left 5px (optical compensation for round left edge of "C" in wordmark above vs straight "D" in tagline)
 - **Body text:** Lora Regular (weight 400), 18px, line-height 1.75
-- **Name (Kary Myers, PhD):** Josefin Sans SemiBold, 15px, all-caps
-- **Contact / location:** Josefin Sans, 15px / 14px, all-caps
+- **Name (Kary Myers, PhD):** Jost weight 600, 15px, all-caps
+- **Contact / location:** Jost, 15px / 14px, all-caps
 - **Footer (LLC line):** 11px, color `#c0c0c0`
-- Google Fonts import: Josefin Sans (300, 400, 600) + Lora (400)
+- Google Fonts import: Jost (300, 400, 600) + Lora (400)
 
 ### Rendered images (cairosvg)
 All rendering is done via Docker — see the Rendering Pipeline section. Font handling is
-managed inside the Docker image; no local font installation is required.
+managed inside the Docker image (including the "Jost W600" static instance built by
+`instance_fonts.py`); no local font installation is required.
 
 ---
 
@@ -74,7 +90,9 @@ The mark geometry is embedded directly in each asset SVG in `_source/`, the inli
 `_source/signature-logo.svg`) is also duplicated as vector-drawing code in
 `draw_lockup()` in chalkboard-core's `pdf/chalkboard_pdf.py` (private repo, reportlab
 client documents). If the mark or lockup geometry changes here, update that function
-to match.
+to match. **Currently MISMATCHED:** that reportlab module still renders the wordmark in
+Josefin Sans 600 and has not been migrated to Jost — it needs its own migration session
+(watch for the instancing gotchas noted in chalkboard-core's `pdf/README.md`).
 
 ### Design rules (hard-won):
 1. **Drawing order:** all whisker lines and median lines draw BEFORE the rect (box outline),
@@ -142,7 +160,7 @@ path by convention, often ignoring the HTML link tags.
 | `favicon.svg` | 32×32 viewBox | Browser tab icon (SVG, modern browsers); root by convention |
 | `favicon.ico` | 16+32px | Browser tab icon (legacy fallback); root by convention |
 | `apple-touch-icon.png` | 180×180px | iOS home screen icon; root by convention |
-| `web/og-image-v2.png` | 1200×630px | Open Graph / link preview image |
+| `web/og-image-v3.png` | 1200×630px | Open Graph / link preview image (v3 = Jost rebrand, 2026-07-17) |
 
 ### Signature assets (signature/ folder)
 
@@ -172,7 +190,7 @@ cannot read this file, restate the constraint: transparent background, charcoal
 |------|-----------|---------|
 | `deck/mark.svg` | 106×90 viewBox | Tight-cropped three-box mark, vector (insert directly into Keynote/PowerPoint/Google Slides) |
 | `deck/mark-2x.png` | 636×540px | Raster fallback for the mark |
-| `deck/lockup.pdf` | 548×96pt | Vector lockup with fonts embedded (SVG text would require Josefin Sans installed, so the vector lockup ships as PDF) |
+| `deck/lockup.pdf` | 548×96pt | Vector lockup with fonts embedded (SVG text would require the Jost W600 instance installed, so the vector lockup ships as PDF) |
 | `deck/lockup-2x.png` | 1096×192px | Raster fallback for the lockup |
 
 ### LinkedIn assets (upload manually)
@@ -186,7 +204,7 @@ cannot read this file, restate the constraint: transparent background, charcoal
 
 | File | Purpose |
 |------|---------|
-| `og-image.svg` | Source for og-image-v2.png |
+| `og-image.svg` | Source for og-image-v3.png |
 | `linkedin-banner.svg` | Source for linkedin-banner.png |
 | `linkedin-logo-sq.svg` | Source for linkedin-logo-3box-300.png |
 | `signature-logo.svg` | Source for signature-logo.png |
@@ -202,10 +220,6 @@ assets were produced, avoiding macOS CoreText font weight discrepancies.
 
 ### Rendering environment
 
-All assets are rendered via Docker (Linux + Pango/FreeType), which matches the Ubuntu 24
-environment where the original assets were produced. This is the only supported render path —
-macOS/CoreText produces lighter font weight and should not be used.
-
 **One-time setup:**
 ```bash
 cd "Brand and First Use Info/chalkboard-research-site"
@@ -219,22 +233,39 @@ docker run --rm -v "$(pwd):/work" chalkboard-render
 
 The image is reused on every subsequent run. Only rebuild if `Dockerfile` changes.
 
-Key details of the rendering environment:
-- cairosvg with Pango support (`libpango`, `pangocffi`, `pangocairocffi`) — required for
-  `font-weight="600"` to be passed through correctly; without Pango, numeric weights are ignored
-- Variable fonts installed directly to `/usr/local/share/fonts/` — Pango resolves weight 600
-  from the variable font axis; no static instance extraction needed
-- `signature-logo.svg` uses `font-family="Josefin Sans"` `font-weight="600"` — do not change
-  to `font-family="Josefin Sans SemiBold"` or add stroke compensation; those were macOS workarounds
+### How cairosvg handles font weight (verified 2026-07-17)
+
+cairosvg has **no Pango code path** — it renders text through cairo's "toy" font API,
+which supports only Normal and Bold. The rule is binary: numeric `font-weight` >= 550
+selects the family's Bold face (which fontconfig resolves from a variable font as
+wght 700); anything below 550 selects Regular. Intermediate weights are unreachable via
+`font-weight`.
+
+Verified in the production image (cairosvg 2.9.0): renders of signature-logo.svg with
+`font-weight="600"` vs `"700"` are **byte-identical** (md5 `65a0070d5ca7654080f99d93f9aa76d3`).
+The earlier belief that Pango packages made numeric weights work was wrong; those
+packages were inert and have been removed from the Dockerfile.
+
+Consequences:
+- To render an intermediate weight, a static instance must be built at Docker build time
+  with fonttools instancer and registered under its own family name. `instance_fonts.py`
+  builds Jost wght 600 as family **"Jost W600"** (usWeightClass 400, so the toy API's
+  Normal maps to it). The instance lives only inside the image — never commit it to this
+  repo (publicly served; renamed modified fonts raise OFL Reserved Font Name questions).
+- Wordmark text in SVG sources: `font-family="Jost W600"`, **no font-weight attribute**.
+  Writing `font-family="Jost" font-weight="600"` would silently render wght 700 — the
+  weight explicitly rejected as too heavy.
+- Lighter text (weights 300/400) uses `font-family="Jost"`; the toy API renders the
+  variable font's Regular regardless of the number written.
 
 ### Per-asset render settings
 
 | Asset | SVG source | Output dimensions | Notes |
 |-------|-----------|------------------|-------|
-| web/og-image-v2.png | og-image.svg | 1200×630 | 144 DPI |
+| web/og-image-v3.png | og-image.svg | 1200×630 | 144 DPI |
 | linkedin/linkedin-banner.png | linkedin-banner.svg | 1128×191 | 144 DPI |
 | linkedin/linkedin-logo-3box-300.png | linkedin-logo-sq.svg | 300×300 | 144 DPI |
-| signature/signature-logo.png | signature-logo.svg | 548×96 | render at scale=1 (700×96), crop to (0,0,548,96); 72 DPI. Uses `font-weight="600"` — requires Pango in the Docker image to take effect |
+| signature/signature-logo.png | signature-logo.svg | 548×96 | render at scale=1 (700×96), crop to (0,0,548,96); 72 DPI. Wordmark uses `font-family="Jost W600"` (see font-weight section above) |
 | signature/signature-logo-2x.png | signature-logo.svg | 1096×192 | supersampled from a 4× render; 144 DPI |
 | deck/mark-2x.png | deck/mark.svg | 636×540 | transparent; scale=6 |
 | deck/lockup.pdf | signature-logo.svg | 548×96pt | white rect stripped and canvas narrowed at render time (see render_deck_assets) |
@@ -247,7 +278,8 @@ Key details of the rendering environment:
 ## Open Issues / Active Threads
 
 - **Gmail signature:** signature-logo.png (548×96) is hosted at chalkboard-research.com/signature-logo.png. Insert via Gmail Settings → Signature → image icon → URL. Sizing behavior is inconsistent across Gmail contexts; this is a known Gmail limitation.
-- **LinkedIn OG cache:** if og-image-v2.png is updated, run LinkedIn Post Inspector (linkedin.com/post-inspector) to force a re-scrape. If cache persists, rename to og-image-v3.png (incrementing the version) and update the og:image meta tags in index.html, render.py, and CLAUDE.md.
+- **LinkedIn OG cache:** the Jost rebrand bumped the og-image to og-image-v3.png (2026-07-17) — run LinkedIn Post Inspector (linkedin.com/post-inspector) after pushing to pick it up. In general: if LinkedIn caches a stale og-image, rename to the next version (og-image-v4.png) and update the og:image meta tags in index.html, render.py, and CLAUDE.md.
+- **Jost migration follow-ups (2026-07-17):** re-upload `linkedin/linkedin-banner.png` to the Company Page (the square logo has no text and is unchanged); take a fresh Wayback Machine snapshot of chalkboard-research.com for the service-mark file; migrate chalkboard-core's `draw_lockup()` (still Josefin) in its own session. Proton signature needs no edit — it references the same signature-logo-2x.png URL.
 - **LinkedIn mobile banner overlap:** banner wordmark starts at x=420 to clear the square logo overlay on mobile. May need further adjustment if LinkedIn changes its mobile layout.
 - **Dark mode:** index.html does not implement prefers-color-scheme. White background is intentional; page will look the same in dark mode browsers.
 
