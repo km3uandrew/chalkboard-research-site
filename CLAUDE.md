@@ -86,13 +86,11 @@ The logo is three boxplots (Concept 2: colored IQR outlines, charcoal whiskers a
 The mark geometry is embedded directly in each asset SVG in `_source/`, the inline SVG in
 `index.html`, and `deck/mark.svg`.
 
-**Cross-repo duplicate:** the lockup geometry (mark + divider + wordmark, from
-`_source/signature-logo.svg`) is also duplicated as vector-drawing code in
-`draw_lockup()` in chalkboard-core's `pdf/chalkboard_pdf.py` (private repo, reportlab
-client documents). If the mark or lockup geometry changes here, update that function
-to match. **Currently MISMATCHED:** that reportlab module still renders the wordmark in
-Josefin Sans 600 and has not been migrated to Jost — it needs its own migration session
-(watch for the instancing gotchas noted in chalkboard-core's `pdf/README.md`).
+**Cross-repo duplicate:** the lockup geometry in `_source/signature-logo.svg` was historically
+duplicated by `draw_lockup()` in chalkboard-core's reportlab module, now retired and frozen
+at the Josefin-era render. This SVG is the sole live source of the lockup; no cross-repo
+sync is required unless that module is revived (chalkboard-core carries a gated backlog
+entry for that case).
 
 ### Design rules (hard-won):
 1. **Drawing order:** all whisker lines and median lines draw BEFORE the rect (box outline),
@@ -279,7 +277,7 @@ Consequences:
 
 - **Gmail signature:** signature-logo.png (548×96) is hosted at chalkboard-research.com/signature-logo.png. Insert via Gmail Settings → Signature → image icon → URL. Sizing behavior is inconsistent across Gmail contexts; this is a known Gmail limitation.
 - **LinkedIn OG cache:** the Jost rebrand bumped the og-image to og-image-v3.png (2026-07-17) — run LinkedIn Post Inspector (linkedin.com/post-inspector) after pushing to pick it up. In general: if LinkedIn caches a stale og-image, rename to the next version (og-image-v4.png) and update the og:image meta tags in index.html, render.py, and CLAUDE.md. Post Inspector rendered blank even when logged in, July 2026; ?query-string re-scrape worked as fallback.
-- **Jost migration follow-ups (2026-07-17):** re-upload `linkedin/linkedin-banner.png` to the Company Page (the square logo has no text and is unchanged); take a fresh Wayback Machine snapshot of chalkboard-research.com for the service-mark file; migrate chalkboard-core's `draw_lockup()` (still Josefin) in its own session. Proton signature needs no edit — it references the same signature-logo-2x.png URL.
+- **Jost migration follow-ups (2026-07-17):** re-upload `linkedin/linkedin-banner.png` to the Company Page (the square logo has no text and is unchanged); take a fresh Wayback Machine snapshot of chalkboard-research.com for the service-mark file. Proton signature needs no edit — it references the same signature-logo-2x.png URL. (chalkboard-core's reportlab lockup module was retired rather than migrated — see the Cross-repo duplicate note above.)
 - **LinkedIn mobile banner overlap:** banner wordmark starts at x=420 to clear the square logo overlay on mobile. May need further adjustment if LinkedIn changes its mobile layout.
 - **Dark mode:** index.html does not implement prefers-color-scheme. White background is intentional; page will look the same in dark mode browsers.
 
