@@ -140,6 +140,24 @@ Do not reintroduce fractional coordinates or stroke widths.
 (The signature-logo lockup uses its own slightly different integer geometry —
 see `_source/signature-logo.svg` — with the same design rules.)
 
+### Lockup text block (signature-logo.svg)
+
+The lockup stacks the wordmark over the tagline, matching the web header and the
+og-image. Proportions were derived from `og-image.svg` so all three read as the
+same lockup at different sizes:
+
+- Wordmark: `font-family="Jost W600"`, font-size 26, letter-spacing 3, x=146, baseline y=47
+- Tagline: `font-family="Jost"`, font-size 11, letter-spacing 2 (0.18em, matching the
+  web tagline's tracking), fill `#4a4a4a`, x=149, baseline y=67
+- The 20px baseline-to-baseline gap and the tagline's 0.68× width relative to the
+  wordmark both match the og-image ratios. Cap height in Jost is 0.7em, so the
+  block spans y 28.8–67 and centers on 47.9 against the 96-tall canvas.
+- The tagline's +3px x offset is the design-rule optical nudge (round "C" above vs
+  straight "D" below), scaled down from og-image's +5px at font-size 46.
+
+The tagline was added 2026-08-28. Because the deck lockup renders from this same
+source, `deck/lockup.pdf` and `deck/lockup-2x.png` carry the tagline too.
+
 ---
 
 ## Asset Inventory
@@ -164,8 +182,8 @@ path by convention, often ignoring the HTML link tags.
 
 | File | Dimensions | Purpose |
 |------|-----------|---------|
-| `signature/signature-logo.png` | 548×96px | Email signature image, 1× legacy; wordmark only, no tagline |
-| `signature/signature-logo-2x.png` | 1096×192px | Email signature image for high-DPI displays — the one referenced in the Proton Mail signature |
+| `signature/signature-logo.png` | 548×96px | Email signature image, 1× legacy; wordmark over tagline |
+| `signature/signature-logo-2x.png` | 1096×192px | Email signature image for high-DPI displays — the one referenced in the Proton Mail signature; wordmark over tagline |
 | `signature/email_signature.html` | — | The signature HTML pasted into Proton Mail's editor (HTML mode); logo linked to the site at width 400 |
 
 ### Deck assets (deck/ folder, transparent backgrounds)
@@ -188,7 +206,7 @@ cannot read this file, restate the constraint: transparent background, charcoal
 |------|-----------|---------|
 | `deck/mark.svg` | 106×90 viewBox | Tight-cropped three-box mark, vector (insert directly into Keynote/PowerPoint/Google Slides) |
 | `deck/mark-2x.png` | 636×540px | Raster fallback for the mark |
-| `deck/lockup.pdf` | 548×96pt | Vector lockup with fonts embedded (SVG text would require the Jost W600 instance installed, so the vector lockup ships as PDF) |
+| `deck/lockup.pdf` | 548×96pt | Vector lockup (wordmark over tagline) with fonts embedded (SVG text would require the Jost W600 instance installed, so the vector lockup ships as PDF) |
 | `deck/lockup-2x.png` | 1096×192px | Raster fallback for the lockup |
 
 ### LinkedIn assets (upload manually)
@@ -279,6 +297,11 @@ Consequences:
 - **LinkedIn OG cache:** the Jost rebrand bumped the og-image to og-image-v3.png (2026-07-17) — run LinkedIn Post Inspector (linkedin.com/post-inspector) after pushing to pick it up. In general: if LinkedIn caches a stale og-image, rename to the next version (og-image-v4.png) and update the og:image meta tags in index.html, render.py, and CLAUDE.md. Post Inspector rendered blank even when logged in, July 2026; ?query-string re-scrape worked as fallback.
 - **Jost migration follow-ups (2026-07-17):** re-upload `linkedin/linkedin-banner.png` to the Company Page (the square logo has no text and is unchanged); take a fresh Wayback Machine snapshot of chalkboard-research.com for the service-mark file. Proton signature needs no edit — it references the same signature-logo-2x.png URL. (chalkboard-core's reportlab lockup module was retired rather than migrated — see the Cross-repo duplicate note above.)
 - **LinkedIn mobile banner overlap:** banner wordmark starts at x=420 to clear the square logo overlay on mobile. May need further adjustment if LinkedIn changes its mobile layout.
+- **Signature tagline (2026-08-28):** the lockup now carries the tagline. The Proton
+  Mail signature HTML is unchanged — same URL, same 548:96 aspect — but email clients
+  and Proton's editor cache images by URL, so a stale logo may persist for a while.
+  If it needs forcing, bump to a versioned filename (`signature-logo-2x-v2.png`) and
+  update `signature/email_signature.html` plus `render.py`.
 - **Dark mode:** index.html does not implement prefers-color-scheme. White background is intentional; page will look the same in dark mode browsers.
 
 ---
