@@ -307,9 +307,17 @@ Consequences:
   .dash` in index.html wraps the hyphen in an inline-block and applies
   `transform: scaleX(1.9)`, lengthening the bar without thickening it. The text node
   is untouched, so `textContent`, selection, and the mailto: href all still carry the
-  literal address. The margins (0.1em) give back the space the stretched glyph eats,
-  since the inline-block keeps its unscaled advance width. If the wordmark font ever
-  changes again, re-check the factor against the new hyphen metrics.
+  literal address. The margins give back the space the stretched glyph eats, since the
+  inline-block keeps its unscaled advance width, and they are **deliberately
+  asymmetric** (`0 0.15em 0 0.1em`): making the span an atomic inline costs it the
+  0.08em of letter-spacing Blink would otherwise place between the dash and the "r"
+  (Blink adds no letter-spacing after an atomic inline), and Jost gives "r" a 1.2px
+  left sidebearing against "d"'s 0.6px right one. With equal margins the dash lands
+  0.72px closer to the "r" — visible at 15px. The extra 0.05em on the right evens it
+  out: 2.14px of ink-to-ink white on the left, 2.17px on the right. Every term scales
+  with font-size, so the balance holds at any size. If the brand font changes again,
+  re-derive both the scale factor and the right margin from the new hyphen, "d" and
+  "r" metrics.
   (Unrelated and pre-existing: `text-transform: uppercase` on `.contact` means a
   copied selection comes out uppercase. The href is correct lowercase, and mail
   domains are case-insensitive, so this has been left alone.)

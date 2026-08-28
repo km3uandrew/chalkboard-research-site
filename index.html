@@ -155,12 +155,20 @@
        the text itself, so the address stays exactly "kary@chalkboard-research.com"
        for copy/paste, screen readers, and the mailto: href. scaleX lengthens the
        bar without thickening it. The span keeps its unscaled advance width, so
-       the margins restore the space the stretched glyph eats into. */
+       the margins restore the space the stretched glyph eats into.
+
+       The margins are deliberately asymmetric. Making the span an atomic inline
+       costs it the 0.08em of letter-spacing that Blink would otherwise put
+       between the dash and the "r" (it does not add letter-spacing after an
+       atomic inline), and Jost gives "r" a 1.2px left sidebearing against "d"'s
+       0.6px right one. Net, symmetric margins leave the dash 0.72px closer to
+       the "r" — visible at this size. The extra 0.05em on the right restores
+       the balance: 2.14px of ink-to-ink white on the left, 2.18px on the right. */
     .contact .dash {
       display: inline-block;
       letter-spacing: 0;
       transform: scaleX(1.9);
-      margin: 0 0.1em;
+      margin: 0 0.15em 0 0.1em;
     }
 
     /* ── Location ── */
