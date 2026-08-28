@@ -150,6 +150,19 @@
       border-bottom-color: var(--charcoal);
     }
 
+    /* Jost's hyphen is only 3px wide at 15px — short enough to be misread as a
+       dot in the domain name. Stretch the glyph horizontally without touching
+       the text itself, so the address stays exactly "kary@chalkboard-research.com"
+       for copy/paste, screen readers, and the mailto: href. scaleX lengthens the
+       bar without thickening it. The span keeps its unscaled advance width, so
+       the margins restore the space the stretched glyph eats into. */
+    .contact .dash {
+      display: inline-block;
+      letter-spacing: 0;
+      transform: scaleX(1.9);
+      margin: 0 0.1em;
+    }
+
     /* ── Location ── */
     .location {
       margin-top: 22px;
@@ -231,7 +244,8 @@
 
     <div class="contact">
       <p class="name-line">Kary Myers, PhD</p>
-      <a href="mailto:kary@chalkboard-research.com">kary@chalkboard-research.com</a>
+      <a href="mailto:kary@chalkboard-research.com">kary@chalkboard<span
+        class="dash">-</span>research.com</a>
     </div>
 
     <p class="location">Santa Fe, New Mexico</p>

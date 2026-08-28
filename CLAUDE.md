@@ -302,6 +302,21 @@ Consequences:
   and Proton's editor cache images by URL, so a stale logo may persist for a while.
   If it needs forcing, bump to a versioned filename (`signature-logo-2x-v2.png`) and
   update `signature/email_signature.html` plus `render.py`.
+- **Email hyphen (2026-08-28):** Jost's hyphen is 3.0px wide by 1.1px tall at 15px —
+  barely wider than the 1.65px period, so the domain hyphen read as a dot. `.contact
+  .dash` in index.html wraps the hyphen in an inline-block and applies
+  `transform: scaleX(1.9)`, lengthening the bar without thickening it. The text node
+  is untouched, so `textContent`, selection, and the mailto: href all still carry the
+  literal address. The margins (0.1em) give back the space the stretched glyph eats,
+  since the inline-block keeps its unscaled advance width. If the wordmark font ever
+  changes again, re-check the factor against the new hyphen metrics.
+  (Unrelated and pre-existing: `text-transform: uppercase` on `.contact` means a
+  copied selection comes out uppercase. The href is correct lowercase, and mail
+  domains are case-insensitive, so this has been left alone.)
+- **Previewing the site:** `.claude/launch.json` defines a `site` config
+  (`python3 -m http.server 8765`) so the page can be opened in a real browser —
+  needed for anything font- or CSS-dependent, since Google Fonts will not load
+  over `file://`.
 - **Dark mode:** index.html does not implement prefers-color-scheme. White background is intentional; page will look the same in dark mode browsers.
 
 ---
