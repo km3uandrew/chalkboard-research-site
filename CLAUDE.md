@@ -297,11 +297,16 @@ Consequences:
 - **LinkedIn OG cache:** the Jost rebrand bumped the og-image to og-image-v3.png (2026-07-17) — run LinkedIn Post Inspector (linkedin.com/post-inspector) after pushing to pick it up. In general: if LinkedIn caches a stale og-image, rename to the next version (og-image-v4.png) and update the og:image meta tags in index.html, render.py, and CLAUDE.md. Post Inspector rendered blank even when logged in, July 2026; ?query-string re-scrape worked as fallback.
 - **Jost migration follow-ups (2026-07-17):** re-upload `linkedin/linkedin-banner.png` to the Company Page (the square logo has no text and is unchanged); take a fresh Wayback Machine snapshot of chalkboard-research.com for the service-mark file. Proton signature needs no edit — it references the same signature-logo-2x.png URL. (chalkboard-core's reportlab lockup module was retired rather than migrated — see the Cross-repo duplicate note above.)
 - **LinkedIn mobile banner overlap:** banner wordmark starts at x=420 to clear the square logo overlay on mobile. May need further adjustment if LinkedIn changes its mobile layout.
-- **Signature tagline (2026-08-28):** the lockup now carries the tagline. The Proton
-  Mail signature HTML is unchanged — same URL, same 548:96 aspect — but email clients
-  and Proton's editor cache images by URL, so a stale logo may persist for a while.
-  If it needs forcing, bump to a versioned filename (`signature-logo-2x-v2.png`) and
-  update `signature/email_signature.html` plus `render.py`.
+- **Signature tagline (2026-08-28, resolved):** the lockup now carries the tagline.
+  Proton kept serving the old tagline-free logo from the bare URL — it proxies remote
+  images through its own cache, which does not inherit the origin's 4h `max-age`. The
+  origin was verified correct (live bytes identical to the repo file), so this was
+  purely a downstream cache. **A `?v=2` query string fixed it**, and
+  `signature/email_signature.html` now carries that URL — keep the query string when
+  editing that file. No rename or re-render was needed; the query string is the
+  cheapest cache-buster and is preferred over versioning the filename here (same
+  trick that worked for the LinkedIn scrape). Bump to `v=3` if the logo is revised
+  again and Proton serves a stale copy.
 - **Email hyphen (2026-08-28):** Jost's hyphen is 3.0px wide by 1.1px tall at 15px —
   barely wider than the 1.65px period, so the domain hyphen read as a dot. `.contact
   .dash` in index.html wraps the hyphen in an inline-block and applies

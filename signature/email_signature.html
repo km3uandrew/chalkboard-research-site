@@ -2,13 +2,20 @@
      mode (visual mode would show this as literal text). Both the width/height
      attributes and the inline width style are required — clients differ on
      which they honor, and setting both is what prevents the image blowing up.
-     Logo aspect ratio is 548:96; to resize, height = width * 96 / 548. -->
+     Logo aspect ratio is 548:96; to resize, height = width * 96 / 548.
+
+     The ?v=2 on the logo URL is load-bearing — do not "clean it up". Proton
+     proxies remote images through its own cache, and after the tagline was
+     added (2026-08-28) it kept serving the old tagline-free logo from the bare
+     URL. The query string is a cache key Proton had not seen, which is what
+     made it pick up the new image. Bump to v=3 if the logo is ever revised
+     again and Proton serves a stale copy. -->
 <table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
   <tr>
     <td style="padding:0 0 10px 0;">
       <a href="https://chalkboard-research.com/" style="text-decoration:none;">
-        <img src="https://chalkboard-research.com/signature/signature-logo-2x.png"
-             alt="Chalkboard Research"
+        <img src="https://chalkboard-research.com/signature/signature-logo-2x.png?v=2"
+             alt="Chalkboard Research — Drawing Insights from Your Data"
              width="400" height="70"
              style="display:block; width:400px; max-width:100%; height:auto; border:0;">
       </a>
