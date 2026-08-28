@@ -295,7 +295,14 @@ Consequences:
 
 - **Gmail signature:** signature-logo.png (548×96) is hosted at chalkboard-research.com/**signature/**signature-logo.png. Insert via Gmail Settings → Signature → image icon → URL. (The bare root path this note used to give — `/signature-logo.png` — has not existed since the assets moved into `signature/`; Cloudflare Pages answers it with the fallback HTML page under a 200, so it fails as a broken image rather than a 404. Verified 2026-08-28.) Sizing behavior is inconsistent across Gmail contexts; this is a known Gmail limitation.
 - **LinkedIn OG cache:** the Jost rebrand bumped the og-image to og-image-v3.png (2026-07-17) — run LinkedIn Post Inspector (linkedin.com/post-inspector) after pushing to pick it up. In general: if LinkedIn caches a stale og-image, rename to the next version (og-image-v4.png) and update the og:image meta tags in index.html, render.py, and CLAUDE.md. Post Inspector rendered blank even when logged in, July 2026; ?query-string re-scrape worked as fallback.
-- **Jost migration follow-ups (2026-07-17):** re-upload `linkedin/linkedin-banner.png` to the Company Page (the square logo has no text and is unchanged); take a fresh Wayback Machine snapshot of chalkboard-research.com for the service-mark file. Proton signature needs no edit — it references the same signature-logo-2x.png URL. (chalkboard-core's reportlab lockup module was retired rather than migrated — see the Cross-repo duplicate note above.)
+- **Jost migration follow-ups (2026-07-17) — done.** `linkedin/linkedin-banner.png`
+  was re-uploaded to the Company Page in July 2026 (the square logo has no text and
+  was unchanged), and the Wayback snapshot for the service-mark file was taken
+  2026-07-28: https://web.archive.org/web/20260728230156/https://chalkboard-research.com/
+  (verified 2026-08-28). Note the snapshot predates the 2026-08-28 signature-tagline
+  and email-hyphen changes, so it captures the Jost rebrand as first published.
+  (chalkboard-core's reportlab lockup module was retired rather than migrated — see
+  the Cross-repo duplicate note above.)
 - **LinkedIn mobile banner overlap:** banner wordmark starts at x=420 to clear the square logo overlay on mobile. May need further adjustment if LinkedIn changes its mobile layout.
 - **Signature tagline (2026-08-28, resolved):** the lockup now carries the tagline.
   Proton kept serving the old tagline-free logo from the bare URL — it proxies remote
